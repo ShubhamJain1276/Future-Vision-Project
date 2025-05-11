@@ -1,0 +1,30 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.ARFoundation;
+
+public class PrefabCreator : MonoBehaviour
+{
+    [SerializeField] private GameObject drangonPrefab;
+    [SerializeField] private Vector3 prefabOffset;
+
+    private GameObject dragon;
+    private ARTrackedImageManager aRTrackedImageManger;
+
+    private void OnEnable()
+    {
+        aRTrackedImageManger = gameObject.GetComponent<ARTrackedImageManager>();
+
+        aRTrackedImageManger.trackedImagesChanged += OnImageChanged;
+    }
+
+    private void OnImageChanged(ARTrackedImagesChangedEventArgs obj)
+    {
+        foreach (ARTrackedImage image in obj.added)
+        {
+            dragon = Instantiate(drangonPrefab, image.transform);
+            dragon.transform.position += prefabOffset;
+        }
+    }
+}
